@@ -1,0 +1,10 @@
+name: StaffChannel
+main: me.SavageUser.StaffChannel.Core
+authors:
+  - SavageUser
+version: 1.1
+
+commands:
+  staffchat:
+    aliases: [sc]
+    description: Send messages to online staff members.

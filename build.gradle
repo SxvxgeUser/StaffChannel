@@ -1,0 +1,12 @@
+plugins {
+    id("java")
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(files("libs/project-poseidon-1.1.8.jar"))
+    implementation(files("libs/EssentialsB1.7.3.jar"))
+}
