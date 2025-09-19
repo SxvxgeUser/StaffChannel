@@ -148,6 +148,7 @@ public class Core extends JavaPlugin implements Listener {
                                 }
                             } else {
                                 all.sendMessage("§6SC§8:§eSTAFF§8:§c" + sender.getName() + "§8> §f" + message);
+                                //all.sendMessage("Essentials Nickname: " + essentials.getUser(sender.getName()).getNickname()); DEBUG
                             }
                         }
                     } else {
@@ -177,4 +178,5 @@ public class Core extends JavaPlugin implements Listener {
         System.out.println("SC:STAFF:" + sender.getName() + "> " + message);
     }
 }
+
 
