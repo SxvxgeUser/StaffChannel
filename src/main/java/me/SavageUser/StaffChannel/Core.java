@@ -111,7 +111,11 @@ public class Core extends JavaPlugin implements Listener {
                 if (all.isOp() || hasAdminPerm(all)) {
                     if (hasStaffChatEnabled(all)) {
                         if (hasNicknamesEnabled(all)) {
-                            all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§4ADMIN§8:§c" + essentials.getUser(sender.getName()).getNickname() + "§8> §f" + message));
+                            if (essentials.getUser(sender.getName()).getNickname() == null) {
+                                all.sendMessage("§6SC§8:§4ADMIN§8:§c" + sender.getName() + "§8> §f" + message);
+                            } else {
+                                all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§4ADMIN§8:§c" + essentials.getUser(sender.getName()).getNickname() + "§8> §f" + message));
+                            }
                         } else {
                             all.sendMessage("§6SC§8:§4ADMIN§8:§c" + sender.getName() + "§8> §f" + message);
                         }
@@ -137,16 +141,23 @@ public class Core extends JavaPlugin implements Listener {
                     if (sender.isOp() || hasAdminPerm(sender)) {
                         if (hasStaffChatEnabled(all)) {
                             if (hasNicknamesEnabled(all)) {
-                                all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§eSTAFF§8:§c" + essentials.getUser(sender.getName()).getNickname() + "§8> §f" + message));
+                                if (essentials.getUser(sender.getName()).getNickname() == null) {
+                                    all.sendMessage("§6SC§8:§eSTAFF§8:§c" + sender.getName() + "§8> §f" + message);
+                                } else {
+                                    all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§eSTAFF§8:§c" + essentials.getUser(sender.getName()).getNickname() + "§8> §f" + message));
+                                }
                             } else {
                                 all.sendMessage("§6SC§8:§eSTAFF§8:§c" + sender.getName() + "§8> §f" + message);
-                                all.sendMessage("Essentials Nickname: " + essentials.getUser(sender.getName()).getNickname());
                             }
                         }
                     } else {
                         if (hasStaffChatEnabled(all)) {
                             if (hasNicknamesEnabled(all)) {
-                                all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§eSTAFF§8:§5" + essentials.getUser(sender.getName()).getNickname() + "§8> §f" + message));
+                                if (essentials.getUser(sender.getName()).getNickname() == null) {
+                                    all.sendMessage("§6SC§8:§eSTAFF§8:§5" + sender.getName() + "§8> §f" + message);
+                                } else {
+                                    all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§eSTAFF§8:§5" + essentials.getUser(sender.getName()).getNickname() + "§8> §f" + message));
+                                }
                             } else {
                                 all.sendMessage("§6SC§8:§eSTAFF§8:§5" + sender.getName() + "§8> §f" + message);
                             }
@@ -166,3 +177,4 @@ public class Core extends JavaPlugin implements Listener {
         System.out.println("SC:STAFF:" + sender.getName() + "> " + message);
     }
 }
+
