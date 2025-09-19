@@ -25,6 +25,7 @@ public class Core extends JavaPlugin implements Listener {
             new CommandStaff(this);
             this.config = new StaffConfig(new File(this.getDataFolder(), "staffchannel-data.yml"));
             essentials = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
+            this.getServer().getPluginManager().registerEvents(new EssentialsHook(this), this);
             this.getServer().getPluginManager().registerEvents(this, this);
         }
     }
@@ -139,6 +140,7 @@ public class Core extends JavaPlugin implements Listener {
                                 all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§eSTAFF§8:§c" + essentials.getUser(sender.getName()).getNickname() + "§8> §f" + message));
                             } else {
                                 all.sendMessage("§6SC§8:§eSTAFF§8:§c" + sender.getName() + "§8> §f" + message);
+                                all.sendMessage("Essentials Nickname: " + essentials.getUser(sender.getName()).getNickname());
                             }
                         }
                     } else {

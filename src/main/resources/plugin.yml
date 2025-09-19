@@ -3,7 +3,8 @@ main: me.SavageUser.StaffChannel.Core
 authors:
   - SavageUser
 version: 1.1
-
+depend:
+  - Essentials
 commands:
   staffchat:
     aliases: [sc]
