@@ -1,7 +1,6 @@
 package me.SavageUser.StaffChannel;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -16,24 +15,30 @@ public class Core extends JavaPlugin {
     private static List<String> dependencyNames = new ArrayList<String>();
     private String pluginname;
     public Logger logger = Bukkit.getLogger();
-
+    private EssentialsPlugin essentials;
     @Override
     public void onEnable() {
-    pluginname =  this.getDescription().getName();
-    addDependency("Essentials");
+        pluginname =  this.getDescription().getName();
 
-    if(!loadDependencies()){
-    System.out.print(pluginname + ": disabling plugin");
-    this.getPluginLoader().disablePlugin(this);
+
+        addDependency("Essentials");
+
+        if(!loadDependencies()){
+        System.out.print(pluginname + ": disabling plugin");
+        this.getPluginLoader().disablePlugin(this);
+        return;
+        }
+        essentials = new EssentialsPlugin(this);
+
+        new CommandStaff(this);
+
+        this.StaffConfig = new StaffConfig(new File(this.getDataFolder(), "staffchannel-data.yml"));
+
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(new PluginHookManager(this), this);
+        pm.registerEvents(new CoreEvents(this), this);
+
     }
-    new CommandStaff(this);
-
-    this.StaffConfig = new StaffConfig(new File(this.getDataFolder(), "staffchannel-data.yml"));
-
-    PluginManager pm = getServer().getPluginManager();
-    pm.registerEvents(new PluginHookManager(this), this);
-    pm.registerEvents(new CoreEvents(this), this);
-   }
 
     @Override
     public void onDisable() {
@@ -106,7 +111,12 @@ public class Core extends JavaPlugin {
     }
 
     public void sendAdminChannelMessage(CommandSender sender, String message) {
-        String name = (sender instanceof Player) ? sender.getName() : "CONSOLE";
+        String name;
+        if (sender instanceof Player) {
+            name = essentials != null ? essentials.getNick(sender.getName()) : sender.getName();
+        } else {
+            name = "CONSOLE";
+        }
 
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (all.isOp() || hasAdminPerm(all)) {
@@ -119,7 +129,12 @@ public class Core extends JavaPlugin {
     }
 
     public void sendStaffChannelMessage(CommandSender sender, String message) {
-        String name = (sender instanceof Player) ? sender.getName() : "CONSOLE";
+        String name;
+        if (sender instanceof Player) {
+            name = essentials != null ? essentials.getNick(sender.getName()) : sender.getName();
+        } else {
+            name = "CONSOLE";
+        }
 
         boolean senderIsAdmin = false;
         if (sender instanceof Player) {

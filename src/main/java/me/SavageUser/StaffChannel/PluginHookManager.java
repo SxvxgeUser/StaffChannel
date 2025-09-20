@@ -1,5 +1,6 @@
 package me.SavageUser.StaffChannel;
 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -13,6 +14,7 @@ public class PluginHookManager implements Listener {
         this.plugin = plugin;
     }
 
+    @EventHandler
     public void onPluginDisable(PluginEnableEvent event) {
 
         String hookedPluginName = event.getPlugin().getDescription().getName();
@@ -23,6 +25,7 @@ public class PluginHookManager implements Listener {
 
     }
 
+    @EventHandler
     public void onPluginDisable(PluginDisableEvent event) {
         String hookedPluginName = event.getPlugin().getDescription().getName();
 
