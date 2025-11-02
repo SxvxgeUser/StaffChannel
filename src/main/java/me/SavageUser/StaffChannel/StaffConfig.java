@@ -17,11 +17,8 @@ public class StaffConfig extends Configuration {
     }
 
     public void write() {
-        generateConfigOption("TAG", "&6SC&8:");
         generateConfigOption("Channels.ADMIN.permission", "StaffChannel.Admin");
         generateConfigOption("Channels.STAFF.permission", "StaffChannel.Staff");
-//        generateConfigOption("Player-Settings.SavageUser.See-Staff-Chat", true); This line of code is safe to remove.
-//        generateConfigOption("Player-Settings.SavageUser.Show-Nicknames", false); Was used to test player data being created, updated and saved.
     }
 
     private void generateConfigOption(String key, Object defaultValue) {
@@ -85,5 +82,4 @@ public class StaffConfig extends Configuration {
             }
         }
     }
-
 }
