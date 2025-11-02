@@ -1,7 +1,8 @@
 # StaffChannel
 
 **Commands:**
-- /staffchat (channel) (message) [or /sc] - Send messages to staff.
+- /adminchat (message) [or /ac] - Send a message to the admin channel.
+- /staffchat (message) [or /sc] - Send a message to the staff channel.
 - /staffchat reload - Reload the config (staffchannel-data.yml) file.
 - /staffchat shownicknames - Toggle nickname visibility via Essentals API.
 - /staffchat togglechat - Toggle staff chat visibility.
