@@ -1,14 +1,16 @@
 package me.SavageUser.StaffChannel;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.io.File;
 
 public class Core extends JavaPlugin {
     public static StaffConfig StaffConfig;
@@ -24,12 +26,13 @@ public class Core extends JavaPlugin {
         addDependency("Essentials");
 
         if(!loadDependencies()){
-        System.out.print(pluginname + ": disabling plugin");
-        this.getPluginLoader().disablePlugin(this);
-        return;
+            System.out.print(pluginname + ": disabling plugin");
+            this.getPluginLoader().disablePlugin(this);
+            return;
         }
         essentials = new EssentialsPlugin(this);
 
+        new CommandAdmin(this);
         new CommandStaff(this);
 
         this.StaffConfig = new StaffConfig(new File(this.getDataFolder(), "staffchannel-data.yml"));
@@ -46,7 +49,7 @@ public class Core extends JavaPlugin {
     }
 
     public final List<String> getDependenciesList() {
-    return dependencyNames;
+        return dependencyNames;
     }
 
     public boolean loadDependencies(){
@@ -54,18 +57,18 @@ public class Core extends JavaPlugin {
 
         if(!getMissingDependencies().isEmpty()){
 
-        for (String missingDependencyName : getMissingDependencies()) {
+            for (String missingDependencyName : getMissingDependencies()) {
 
-        logger.severe(pluginname + ": dependency " + missingDependencyName + " is missing");
-        }
-           return false;
+                logger.severe(pluginname + ": dependency " + missingDependencyName + " is missing");
+            }
+            return false;
         }
 
         for (String dependencyName : dependencyNames){
 
             if(!Bukkit.getPluginManager().getPlugin(dependencyName).isEnabled()){
-            logger.info(pluginname + ": dependency " + dependencyName + " isn't enabled");
-            return false;
+                logger.info(pluginname + ": dependency " + dependencyName + " isn't enabled");
+                return false;
             }
 
         }
@@ -102,57 +105,84 @@ public class Core extends JavaPlugin {
         return this.StaffConfig.getConfigOption("Player-Settings." + player.getName() + ".Show-Nicknames").equals(true);
     }
 
-    public boolean hasAdminPerm(Player player) {
+    public boolean hasAdminPerm(CommandSender player) {
         return player.hasPermission(String.valueOf(StaffConfig.getConfigOption("Channels.ADMIN.permission")));
     }
 
-    public boolean hasStaffPerm(Player player) {
+    public boolean hasStaffPerm(CommandSender player) {
         return player.hasPermission(String.valueOf(StaffConfig.getConfigOption("Channels.STAFF.permission")));
     }
 
     public void sendAdminChannelMessage(CommandSender sender, String message) {
-        String name;
         if (sender instanceof Player) {
-            name = essentials != null ? essentials.getNick(sender.getName()) : sender.getName();
+            for (Player all : Bukkit.getOnlinePlayers()) {
+                if (all.isOp() || hasAdminPerm(all)) {
+                    if (hasStaffChatEnabled(all)) {
+                        if (hasNicknamesEnabled(all)) {
+                            if (essentials.getNick(sender.getName()) == null) {
+                                all.sendMessage("§6SC§8:§4ADMIN§8:§c" + sender.getName() + "§8> §f" + message);
+                            } else {
+                                all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§4ADMIN§8:§c" + essentials.getNick(sender.getName()) + "§8> §f" + message));
+                            }
+                        } else {
+                            all.sendMessage("§6SC§8:§4ADMIN§8:§c" + sender.getName() + "§8> §f" + message);
+                        }
+                    }
+                }
+            }
         } else {
-            name = "CONSOLE";
-        }
-
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            if (all.isOp() || hasAdminPerm(all)) {
-                if (hasStaffChatEnabled(all)) {
-                    all.sendMessage("§6SC§8:§4ADMIN§8:§c" + name + "§8> §f" + message);
+            for (Player all : Bukkit.getOnlinePlayers()) {
+                if (all.isOp() || hasAdminPerm(all)) {
+                    if (hasStaffChatEnabled(all)) {
+                        all.sendMessage("§6SC§8:§4ADMIN§8:§7CONSOLE§8> §f" + message);
+                    }
                 }
             }
         }
-        System.out.println("SC:ADMIN:" + name + "> " + message);
+        System.out.println("SC:ADMIN:" + sender.getName() + "> " + message);
     }
 
     public void sendStaffChannelMessage(CommandSender sender, String message) {
-        String name;
         if (sender instanceof Player) {
-            name = essentials != null ? essentials.getNick(sender.getName()) : sender.getName();
+            for (Player all : Bukkit.getOnlinePlayers()) {
+                if (all.isOp() || hasStaffPerm(all)) {
+                    if (sender.isOp() || hasAdminPerm(sender)) {
+                        if (hasStaffChatEnabled(all)) {
+                            if (hasNicknamesEnabled(all)) {
+                                if (essentials.getNick(sender.getName()) == null) {
+                                    all.sendMessage("§6SC§8:§eSTAFF§8:§c" + sender.getName() + "§8> §f" + message);
+                                } else {
+                                    all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§eSTAFF§8:§c" + essentials.getNick(sender.getName()) + "§8> §f" + message));
+                                }
+                            } else {
+                                all.sendMessage("§6SC§8:§eSTAFF§8:§c" + sender.getName() + "§8> §f" + message);
+                            }
+                        }
+                    } else {
+                        if (hasStaffChatEnabled(all)) {
+                            if (hasNicknamesEnabled(all)) {
+                                if (essentials.getNick(sender.getName()) == null) {
+                                    all.sendMessage("§6SC§8:§eSTAFF§8:§5" + sender.getName() + "§8> §f" + message);
+                                } else {
+                                    all.sendMessage(ChatColor.translateAlternateColorCodes('&', "§6SC§8:§eSTAFF§8:§5" + essentials.getNick(sender.getName()) + "§8> §f" + message));
+                                }
+                            } else {
+                                all.sendMessage("§6SC§8:§eSTAFF§8:§5" + sender.getName() + "§8> §f" + message);
+                            }
+                        }
+                    }
+                }
+            }
         } else {
-            name = "CONSOLE";
-        }
-
-        boolean senderIsAdmin = false;
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
-            senderIsAdmin = p.isOp() || hasAdminPerm(p);
-        }
-
-        String color = senderIsAdmin ? "§c" : "§5";
-
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            if (all.isOp() || hasStaffPerm(all)) {
-                if (hasStaffChatEnabled(all)) {
-                    all.sendMessage("§6SC§8:§eSTAFF§8:" + color + name + "§8> §f" + message);
+            for (Player all : Bukkit.getOnlinePlayers()) {
+                if (all.isOp() || hasStaffPerm(all)) {
+                    if (hasStaffChatEnabled(all)) {
+                        all.sendMessage("§6SC§8:§eSTAFF§8:§7CONSOLE§8> §f" + message);
+                    }
                 }
             }
         }
-
-        System.out.println("SC:STAFF:" + name + "> " + message);
+        System.out.println("SC:STAFF:" + sender.getName() + "> " + message);
     }
 
 }
