@@ -21,5 +21,4 @@ public class EssentialsPlugin {
     public String getNick(Player player) {
         return getNick(player.getName());
     }
-
 }
