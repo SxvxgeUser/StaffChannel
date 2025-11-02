@@ -2,9 +2,13 @@ name: StaffChannel
 main: me.SavageUser.StaffChannel.Core
 authors:
   - SavageUser
-version: 1.1
-softdepend: [Essentials]
+  - ItsVollx
+version: 1.2
+
 commands:
+  adminchat:
+    aliases: [ac]
+    description: Send a message to online administrators.
   staffchat:
     aliases: [sc]
-    description: Send messages to online staff members.
+    description: Send a message to online staff members.
